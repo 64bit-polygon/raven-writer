@@ -15,7 +15,7 @@ What `raven-writer` does:
 ## Docs
 
 - [`Installation`](#install)
-- [`Basic example`](#basic)
+- [`Quick start example`](#basic)
 - [`Instantiation`](#instantiation) - Creates the `POE instance`
   - [`instance.fetchLocalizations({...})`](#fetchLocalizations) - Fetches and caches localizations
   - [`instance.makeDictionary(language)`](#makeDictionary) - returns a dictionary function
@@ -32,10 +32,18 @@ What `raven-writer` does:
 npm install raven-writer -S
 ```
 
-## <a id="basic"></a>Basic example
+## <a id="basic"></a>Quick start example
 
-Note: assume there's a term `GREETING` defined in the project with the following `content` values:
-**`en_us`**: `"Hello, **{{name}}!**"`
+Given the following POEditor project
+
+<img src="https://github.com/64bit-polygon/resources/blob/main/images/raven-writer-POEditor.png?raw=true" />
+
+In our project we have:
+- A language is American english, which has a ISO 639-1 language code of `en-us`
+- A term `MY_KEY` that has a content value of `"My value"`
+- A term `GREETING` that has a content value of `"Hello, **{{name}}!**"`
+  - Note that the value has `{{}}` to denote an interpolated value with the key `name`
+  - It also has `**` markdown indicating it should be bolded
 
 ```js
 import Raven from "raven-writer";
@@ -43,9 +51,11 @@ const POE = new Raven();
 await POE.fetchLocalizations({
   id: "<POEDITOR_PROJECT_ID>",
   token: "<YOUR_READ_ONLY_POEDITOR_API_TOKEN>",
-  languages: ["en_us"]
+  languages: ["en-us"]
 });
-const Translate = POE.makeDictionary("en_us");
+const Translate = POE.makeDictionary("en-us");
+console.log(Translate("MY_KEY"));
+// Logs: "My value"
 console.log(Translate("GREETING", {name: "Nate"}))
 // Logs: "Hello, <b>Nate!</b>"
 ```
@@ -97,7 +107,7 @@ const localizations = {
 };
 
 const PRELOADED = new Raven(localizations);
-const Translate = POE.makeDictionary("en_us");
+const Translate = POE.makeDictionary("en-us");
 console.log(Translate("GREETING"))
 // Logs: "Hi!"
 ```
@@ -131,7 +141,7 @@ const POE = new Raven();
 await POE.fetchLocalizations({
   id: "<POEDITOR_PROJECT_ID>",
   token: "<YOUR_READ_ONLY_POEDITOR_API_TOKEN>",
-  languages: ["en_us", "sp_mx"],
+  languages: ["en-us", "sp_mx"],
   keepAlive: tenMins // optional
 });
 ```
@@ -204,7 +214,7 @@ Assume the cached localizations are the following:
 ```js
 import Raven from "raven-writer";
 const POE = new Raven();
-await POE.fetchLocalizations({..., languages: ["en_us", "sp_mx"]});
+await POE.fetchLocalizations({..., languages: ["en-us", "sp_mx"]});
 console.log(POE.getLocalizations()) // Logs the preceding full object
 console.log(POE.getLocalizations("sp_mx")) // Logs { GREETING: "Hola" }
 ```

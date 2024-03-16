@@ -15,7 +15,7 @@ import enGbMock from "./fixtures/enGbMock.js";
 import customUrlMock from "./fixtures/customUrlMock.js";
 
 const EN_US = "en-us";
-const EN_GB = "en_gb";
+const EN_GB = "en-gb";
 const INTERPOLATION_1 = "first";
 const INTERPOLATION_2 = "second";
 const HTML_STR_WITH_INTERPOLATIONS =
@@ -130,7 +130,7 @@ describe("Localize", () => {
   });
 
   it("should throw an error if a dictionary is created without localizations", () => {
-    expect(() => POE.makeDictionary("en_us")).toThrow(MISSING_LOCALIZATIONS_ERROR_MESSAGE);
+    expect(() => POE.makeDictionary("en-us")).toThrow(MISSING_LOCALIZATIONS_ERROR_MESSAGE);
   });
 
   it("should throw an error if a POEditor token is missing in fetchLocalizations({...})", () => {
