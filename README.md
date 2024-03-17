@@ -317,10 +317,10 @@ Assume `POE.fetchLocalizations({...})` caches the following localizations:
 const EN_US = POE.makeDictionary("en-us");
 const SP_MX = POE.makeDictionary("sp-mx");
 
-// Logs: "Hello, <i>Nate!</i>"
+// Logs: "<i>Hello</i>, Nate"
 console.log(EN_US("GREETING", {name: "Nate"}));
 
-// Logs: "Hola, Nate!"
+// Logs: "Hola, Nate"
 console.log(SP_MX("GREETING", {name: "Nate"}));
 ```
 
