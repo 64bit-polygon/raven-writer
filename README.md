@@ -8,7 +8,7 @@ What `raven-writer` does:
 - Refreshes those localizations at a given interval
 - Transforms simple markdown in your content into HTML strings
 - Allows for dynamic interpolation of string values into your content
-- Easily gets values by key
+- Easily gets values by term
 
 ---
 
@@ -17,12 +17,12 @@ What `raven-writer` does:
 - [`Installation`](#install)
 - [`Quick start example`](#basic)
 - [`Instantiation`](#instantiation) - Creates the `POE instance`
-  - [`instance.fetchLocalizations({...})`](#fetchLocalizations) - Fetches and caches localizations
-  - [`instance.makeDictionary(language)`](#makeDictionary) - returns a dictionary function
-  - [`instance.localizations(language)`](#localizations) - returns the raw localizations
-  - [`instance.makeText(str, interpolations)`](#makeText) - helper method to add interpolations to any string value and transform simple markdown into an HTML string
-  - [`instance.kill()`](#kill) - Kills all refreshing of localizations on a `POE instance`
-- [`Dictionary(key, interpolations)`](#dictionary) - function that returns the value from a cached language
+  - [`POE.fetchLocalizations({...})`](#fetchLocalizations) - Fetches and caches localizations
+  - [`POE.makeDictionary(language)`](#makeDictionary) - returns a dictionary function
+  - [`POE.localizations(language)`](#localizations) - returns the raw localizations
+  - [`POE.makeText(str, interpolations)`](#makeText) - helper method to add interpolations to any string value and transform simple markdown into an HTML string
+  - [`POE.kill()`](#kill) - Kills all refreshing of localizations on a `POE instance`
+- [`Dictionary(term, interpolations)`](#dictionary) - function that returns the value from a cached language
 - [`Content markdown and interpolation syntax`](#contentSyntax) - How your POEditor content should be written for MD and interpolations
 - [`Localizations structure`](#localizationsStructure)
 
@@ -39,25 +39,33 @@ Given the following POEditor project
 <img src="https://github.com/64bit-polygon/resources/blob/main/images/raven-writer-POEditor.png?raw=true" />
 
 In our project we have:
-- A language is American english, which has a ISO 639-1 language code of `en-us`
+- A language that is American english, which has a ISO 639-1 language code of `en-us`
 - A term `MY_KEY` that has a content value of `"My value"`
-- A term `GREETING` that has a content value of `"Hello, **{{name}}!**"`
+- A second term `GREETING` that has a content value of `"Hello, **{{name}}!**"`
   - Note that the value has `{{}}` to denote an interpolated value with the key `name`
   - It also has `**` markdown indicating it should be bolded
 
 ```js
 import Raven from "raven-writer";
+
+// make the POE instance
 const POE = new Raven();
+
+// load localizations into the instance
 await POE.fetchLocalizations({
   id: "<POEDITOR_PROJECT_ID>",
   token: "<YOUR_READ_ONLY_POEDITOR_API_TOKEN>",
   languages: ["en-us"]
 });
+
+// make a dictionary
 const Translate = POE.makeDictionary("en-us");
-console.log(Translate("MY_KEY"));
+
 // Logs: "My value"
-console.log(Translate("GREETING", {name: "Nate"}))
+console.log(Translate("MY_KEY"));
+
 // Logs: "Hello, <b>Nate!</b>"
+console.log(Translate("GREETING", {name: "Nate"}));
 ```
 
 ## <a id="instantiation"></a>Instantiation
@@ -108,11 +116,10 @@ const localizations = {
 
 const PRELOADED = new Raven(localizations);
 const Translate = POE.makeDictionary("en-us");
-console.log(Translate("GREETING"))
-// Logs: "Hi!"
+console.log(Translate("GREETING")); // Logs: "Hi!"
 ```
 
-## <a id="fetchLocalizations"></a>`instance.fetchLocalizations({...})`
+## <a id="fetchLocalizations"></a>`POE.fetchLocalizations({...})`
 
 Fetches and catches localizations.
 
@@ -158,7 +165,7 @@ await POE.fetchLocalizations({
 
 <u>Note</u>: *the response from your endpoint **must** have the same structure as the [`localizations structure`](#localizationsStructure)*
 
-## <a id="makeDictionary"></a>`instance.makeDictionary(language)`
+## <a id="makeDictionary"></a>`POE.makeDictionary(language)`
 
 Makes a [`Dictionary function`](#dictionary) for a given language that has already been cached in the `POE instance`
 
@@ -182,7 +189,7 @@ const enUsDictionary = POE.makeDictionary("en-us");
 const spMxDictionary = POE.makeDictionary("sp-mx");
 ```
 
-## <a id="localizations"></a>`instance.getLocalizations(language)`
+## <a id="localizations"></a>`POE.getLocalizations(language)`
 
 Returns the raw localizations object. see: [`localizations structure`](#localizationsStructure).
 
@@ -219,7 +226,7 @@ console.log(POE.getLocalizations()) // Logs the preceding full object
 console.log(POE.getLocalizations("sp_mx")) // Logs { GREETING: "Hola" }
 ```
 
-## <a id="makeText"></a>`instance.makeText(str, interolations)`
+## <a id="makeText"></a>`POE.makeText(str, interolations)`
 
 Adds interpolations and/or Markdown transformed into HTML string to a given string. See: [`Content markdown and interpolation syntax`](#contentSyntax).
 
@@ -253,7 +260,7 @@ console.log(POE.makeText("Some *italic text*"));
 console.log(POE.makeText("Hello, **{{name}}**", { name: "Nate" }));
 ```
 
-## <a id="kill"></a>`instance.kill()`
+## <a id="kill"></a>`POE.kill()`
 
 If you called `POE.fetchLocalizations({...})` and set it to refresh localizations via `keepAlive`, this stops all refreshes on that instance.
 
@@ -272,6 +279,51 @@ await POE.fetchLocalizations({..., keepAlive: tenMins});
 POE.kill();
 ```
 
+## <a id="dictionary"></a>`Dictionary(term, interpolations)`
+
+The function returns the localized content value of a term, optionally with injected interpolations. Markdown is transformed into HTML strings.
+
+#### Props
+
+| Prop              | Type     | Required? | Description |
+| ------------------| :------: | :-------: | ----------- |
+| **term**          | `String` | ✅        | Any string value, ie not a POE term |
+| **interolations** | `Object` |           | An object with key names that match the dynamic content markers for the content value associated with the term |
+
+#### Returns
+
+A string with interpolations and Markdown transformed into HTML str (if applicable) for the language used to create the function.
+
+#### Usage
+
+```js
+import Raven from "raven-writer";
+
+const POE = new Raven();
+await POE.fetchLocalizations({..., languages: ["en-us", "sp-mx"]});
+
+/*
+Assume `POE.fetchLocalizations({...})` caches the following localizations:
+{
+  "en-us": {
+    "GREETING": "*Hello*, {{name}}"
+  },
+  "sp-mx": {
+    "GREETING": "Hola, {{name}}"
+  }
+}
+*/
+
+const EN_US = POE.makeDictionary("en-us");
+const SP_MX = POE.makeDictionary("sp-mx");
+
+// Logs: "Hello, <i>Nate!</i>"
+console.log(EN_US("GREETING", {name: "Nate"}));
+
+// Logs: "Hola, Nate!"
+console.log(SP_MX("GREETING", {name: "Nate"}));
+```
+
 ## <a id="contentSyntax"></a>Content markdown and interpolation syntax
 
 `raven-writer` supports a limited subset of markdown and a simple way of adding interpolations to your content. Use this as a guide when adding content values on the POEditor dashboard
@@ -283,14 +335,14 @@ POE.kill();
 | **bold** | `**bold**` | `<b>world</b>` |
 | *italic* | `*italic*` | `<i>italic</i>`|
 | ***bold italic*** | `***bold italics***` | `<b><i>bold italic</i></b>` |
-| [name](#url) | `[name](https://example.com)` | `<a href="https://example.com" target="_blank">link</a>` |
+| [link](#url) | `[link name](https://example.com)` | `<a href="https://example.com" target="_blank">link name</a>` |
 
 #### Interpolations
 
 Add variables into your content by using `interpolations` object.
 The keys in the `interpolations` object wrapped between `{{` and `}}` can be used to represent dynamic content.
 
-# <a id="localizationsStructure"></a>Localizations structure
+## <a id="localizationsStructure"></a>Localizations structure
 
 The localizations are stored as a single nested object. Top level keys are [ISO 639-1 language codes](https://en.wikipedia.org/wiki/ISO_639-1), each holding that language's localizations in key/value pairs
 where the key is what POEditor refers to as the `term` and value is what POEditor refers to as the `content`. See the [POEditor API](https://poeditor.com/docs/api#terms) for more details.

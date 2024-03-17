@@ -27,6 +27,7 @@ export class Raven {
   }
 
   getLocalizations(language) {
+    if (!this.localizations) return;
     if (!language) return this.localizations;
     const localizationsInLanguage = this.localizations[language];
     return localizationsInLanguage ?? {};

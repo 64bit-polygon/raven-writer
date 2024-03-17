@@ -1,14 +1,22 @@
 {
   "name": "raven-writer",
   "version": "1.0.0",
-  "description": "",
+  "description": "raven-writer is a utility to allow for easy translations and interpolations for projects using the popular POEditor localization service",
+  "keywords": ["POEditor", "raven-writer", "localization", "translation", "interpolate", "markdown"],
+  "homepage": "https://github.com/64bit-polygon/raven-writer",
+  "bugs": { 
+    "url": "https://github.com/64bit-polygon/raven-writer/issues"
+  },
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "tests": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest",
-    "exec": "node ./src/index.js"
+    "tests": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest"
   },
   "author": "Nate De La Cruz",
+  "person": {
+    "name": "Nate De La Cruz",
+    "url": "https://natedelacruz.com/"
+  },
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.24.0",

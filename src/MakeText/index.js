@@ -13,6 +13,7 @@ export const addInterpolatedValues = (str, interpolatedValues) => {
 }
 
 export const makeText = (str, interpolatedValues) => {
+  if (typeof str !== "string") return;
   if (isMD(str)) {
     str = mdToHtmlStr(str);
   }

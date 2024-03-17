@@ -1,5 +1,5 @@
 import {
-  Localize,
+  Raven,
   MALFORMED_LOCALIZATIONS_ERROR_MESSAGE,
   TOKEN_ERROR_MESSAGE,
   PROJECT_ID_ERROR_MESSAGE,
@@ -23,7 +23,7 @@ const HTML_STR_WITH_INTERPOLATIONS =
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-describe("Localize", () => {
+describe("Raven", () => {
   let POE;
   beforeEach(() => {
     fetch.resetMocks();
@@ -121,6 +121,34 @@ describe("Localize", () => {
     expect(cachedLanguages.length).toBe(2);
     expect(cachedLanguages[0]).toBe(EN_US);
     expect(enUsMock.result.terms[0].content).toBe(POE.localizations[terms[0]]);
+  });
+
+  it("should return localizations with getLocalizations()", () => {
+    const language = "en-us";
+    const localizations = {
+      [language]: {
+        MY_KEY: "My value"
+      }
+    };
+
+    POE = new Raven(localizations);
+    const cachedLocalizations = POE.getLocalizations();
+    expect(JSON.stringify(cachedLocalizations)).toBe(JSON.stringify(localizations));
+    const languageLocalizations = POE.getLocalizations(language);
+    expect(JSON.stringify(languageLocalizations)).toBe(JSON.stringify(localizations[language]));
+    expect(POE.getLocalizations("xx-xx")).toStrictEqual({});
+
+    const EMPTY_POE = new Raven();
+    expect(EMPTY_POE.getLocalizations()).toBe(undefined);
+    expect(EMPTY_POE.getLocalizations("en-us")).toBe(undefined);
+  });
+
+  it("should generate values with makeText()", () => {
+    const basicInput = "value";
+    expect(POE.makeText(basicInput)).toBe(basicInput);
+    expect(POE.makeText("Hello, {{name}}", { name: "Nate" })).toBe("Hello, Nate");
+    expect(POE.makeText(undefined)).toBe(undefined);
+    expect(POE.makeText(undefined, { name: "name" })).toBe(undefined);
   });
 
   it("should throw an error if a POEditor is instantiated with a truthy non object value", () => {
