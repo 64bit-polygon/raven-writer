@@ -46,7 +46,7 @@ In our project we have:
   - It also has `**` markdown indicating it should be bolded
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 
 // make the POE instance
 const POE = new Raven();
@@ -99,14 +99,14 @@ POE.kill();
 Most common case
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 const POE = new Raven();
 ```
 
 Optional preloading
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 
 const localizations = {
   "en-us": {
@@ -142,7 +142,7 @@ A `promise` that once resolved will populate the `POE instance` with localizatio
 Most common usage
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 const tenMins = 1000 * 1000 * 60 * 10;
 const POE = new Raven();
 await POE.fetchLocalizations({
@@ -156,7 +156,7 @@ await POE.fetchLocalizations({
 Overwriting the endpoint
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 const POE = new Raven();
 await POE.fetchLocalizations({
   url: "<YOUR_CUSTOM_GET_ENDPOINT>"
@@ -182,7 +182,7 @@ A [`Dictionary function`](#dictionary)
 #### Usage
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 const POE = new Raven();
 await POE.fetchLocalizations({..., languages: ["en-us", "sp-mx"]});
 const enUsDictionary = POE.makeDictionary("en-us");
@@ -219,7 +219,7 @@ Assume the cached localizations are the following:
 ```
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 const POE = new Raven();
 await POE.fetchLocalizations({..., languages: ["en-us", "sp_mx"]});
 console.log(POE.getLocalizations()) // Logs the preceding full object
@@ -244,7 +244,7 @@ A string with interpolations and Markdown transformed into HTML str (if applicab
 #### Usage
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 const POE = new Raven();
 
 // Logs: "Plain text"
@@ -271,7 +271,7 @@ If you called `POE.fetchLocalizations({...})` and set it to refresh localization
 #### Usage
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 const tenMins = 1000 * 1000 * 60 * 10;
 const POE = new Raven();
 await POE.fetchLocalizations({..., keepAlive: tenMins});
@@ -297,7 +297,7 @@ A string with interpolations and Markdown transformed into HTML str (if applicab
 #### Usage
 
 ```js
-import Raven from "raven-writer";
+import { Raven } from "raven-writer";
 
 const POE = new Raven();
 await POE.fetchLocalizations({..., languages: ["en-us", "sp-mx"]});
