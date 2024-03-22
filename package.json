@@ -1,6 +1,6 @@
 {
   "name": "raven-writer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "raven-writer is a utility to allow for easy translations and interpolations for projects using the popular POEditor localization service",
   "keywords": [
     "POEditor",
