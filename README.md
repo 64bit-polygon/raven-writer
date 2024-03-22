@@ -1,6 +1,6 @@
 # `raven-writer`
  
-`raven-writer` is a utility to allow for easy translations and interpolations for projects using the popular [POEditor](https://poeditor.com/) localization service.
+`raven-writer` is a FE utility to allow for easy translations and interpolations for projects using the popular [POEditor](https://poeditor.com/) localization service.
 
 What `raven-writer` does:
 
@@ -36,7 +36,7 @@ npm install raven-writer -S
 
 Given the following POEditor project
 
-<img src="https://github.com/64bit-polygon/resources/blob/main/images/raven-writer-POEditor.png?raw=true" />
+<img src="https://firebasestorage.googleapis.com/v0/b/react-portfolio-944de.appspot.com/o/raven-writer-POEditor.png?alt=media&token=0fbac1cc-f3f2-4db5-a455-dfb38c94a66f" />
 
 In our project we have:
 - A language that is American english, which has a ISO 639-1 language code of `en-us`
@@ -70,7 +70,7 @@ console.log(Translate("GREETING", {name: "Nate"}));
 
 ## <a id="instantiation"></a>Instantiation
 
-In most cases you'll instantiate the `POE instance` simply be calling `new Raven()`.
+In most cases you'll instantiate the `POE instance` simply by calling `new Raven()`.
 
 You can optionally pre-load the `POE instance` with localizations. You'd do this if you wanted
 access to the `POE.makeDictionary(language)` functionality without having to make API calls.
@@ -143,7 +143,7 @@ Most common usage
 
 ```js
 import { Raven } from "raven-writer";
-const tenMins = 1000 * 1000 * 60 * 10;
+const tenMins = 1000 * 60 * 10;
 const POE = new Raven();
 await POE.fetchLocalizations({
   id: "<POEDITOR_PROJECT_ID>",
@@ -262,7 +262,7 @@ console.log(POE.makeText("Hello, **{{name}}**", { name: "Nate" }));
 
 ## <a id="kill"></a>`POE.kill()`
 
-If you called `POE.fetchLocalizations({...})` and set it to refresh localizations via `keepAlive`, this stops all refreshes on that instance.
+If you call `POE.fetchLocalizations({...})` and set it to refresh localizations via `keepAlive`, this stops all refreshes on that instance.
 
 #### Returns
 
@@ -344,8 +344,7 @@ The keys in the `interpolations` object wrapped between `{{` and `}}` can be use
 
 ## <a id="localizationsStructure"></a>Localizations structure
 
-The localizations are stored as a single nested object. Top level keys are [ISO 639-1 language codes](https://en.wikipedia.org/wiki/ISO_639-1), each holding that language's localizations in key/value pairs
-where the key is what POEditor refers to as the `term` and value is what POEditor refers to as the `content`. See the [POEditor API](https://poeditor.com/docs/api#terms) for more details.
+The localizations are stored as a single nested object. Top level keys are [ISO 639-1 language codes](https://en.wikipedia.org/wiki/ISO_639-1), each holding that language's localizations in key/value pairs where the key is what POEditor refers to as the `term` and value is what POEditor refers to as the `content`. See the [POEditor API](https://poeditor.com/docs/api#terms) for more details.
 
 Here is an example assuming 3 languages in the project with only one entry in each:
 
@@ -362,3 +361,5 @@ Here is an example assuming 3 languages in the project with only one entry in ea
   }
 }
 ```
+
+
